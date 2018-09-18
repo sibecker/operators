@@ -1,5 +1,17 @@
-#include <memory>
+#include "Integer.hpp"
 
+int main() {
+    Value<const char*> str = "Which"_S;
+    Char c = Char{str[0_I]};
+
+    Pointer<Int> p = new Int{7};
+    Int x = *p;
+    x = x;
+    delete static_cast<Int*>(p);
+
+    return static_cast<int>(x);
+}
+/*
 // Predefined operators:
 // Cast
 // sizeof
@@ -7,99 +19,10 @@
 // Ternary
 // Subtraction -
 
-template<typename T, typename U>
-U operator,(T, U rhs) { return std::forward(rhs); }
-
-template<typename T>
-class Assign {
-public:
-    // Assumes operators: cast (T* to void*), dereference
-    constexpr Assign& operator=(const T& rhs) { return *(new (this) Assign{rhs}); }
-    constexpr Assign& operator=(T&& rhs) { return *(new (this) Assign{std::move(rhs)}); }
-};
-
-template<typename T>
-class Logical : public Assign<T> {
-public:
-    static constexpr T True = T{true};
-    static constexpr T False = T{false};
-
-    // Assumes operators: cast (T to/from bool), ?:
-    // Also assumes values True and False defined in scope
-    friend constexpr T operator!(T value) { return value ? True : False; }
-
-    friend constexpr T operator&&(T lhs, T rhs) { return lhs ? rhs : False; }
-    friend constexpr T operator||(T lhs, T rhs) { return lhs ? True : rhs; }
-    friend constexpr T operator==(T lhs, T rhs) { return lhs ? rhs : !rhs; }
-    friend constexpr T operator!=(T lhs, T rhs) { return !(lhs == rhs); }
-};
-
-class Bool : public Logical<Bool> {
-private:
-    bool value_;
-
-public:
-    Bool() = default;
-    constexpr explicit Bool(bool value) : value_{value} {}
-
-    constexpr explicit operator bool() const { return value_; }
-};
-
-template<typename T>
-class Subtract {
-public:
-    // Assumes subtraction, cast (int to T)
-    // Also assumes copy assignment
-    friend constexpr T operator-(T value) { return T{0} - value; }
-    friend constexpr T operator+(T value) { return value; }
-
-    template<typename U>
-    friend constexpr T& operator-=(T& lhs, U rhs) { return lhs -= rhs; }
-    template<typename U>
-    friend constexpr T& operator+=(T& lhs, U rhs) { return lhs -= -rhs; }
-
-    template<typename U>
-    friend constexpr auto operator+(T lhs, U rhs) { return lhs - -rhs; }
-
-    template<typename U>
-    friend constexpr T& operator++(T& value) { return value += T{1}; }
-    template<typename U>
-    friend constexpr T& operator++(T& value, int) { T temp{value}; ++value; return temp; }
-
-    template<typename U>
-    friend constexpr T& operator--(T& value) { return value -= T{1}; }
-    template<typename U>
-    friend constexpr T& operator--(T& value, int) { T temp{value}; --value; return temp; }
-};
-
 template<typename T>
 class Unsigned : public Subtract<T>, Assign<T> {
 public:
     // Assumes: subtraction, cast to Bool (means test for non-zero), cast from int
-
-    friend constexpr Bool operator<(T lhs, T rhs) {
-        // lhs < rhs iff (lhs-1) < (rhs-1).
-        // Continue decrementing until one or another is false (i.e. zero)
-        while(static_cast<Bool>(lhs) && static_cast<Bool>(rhs)) {
-            --lhs;
-            --rhs;
-        }
-
-        // One or other of lhs and rhs is 0.
-        // If rhs == 0 then lhs cannot be < rhs
-        // If rhs != 0 then rhs > 0 (unsigned) therefore lhs == 0 and so lhs < rhs
-        return static_cast<Bool>(rhs);
-    }
-
-    friend Bool operator>(T lhs, T rhs) {
-        return rhs < lhs;
-    }
-    friend Bool operator<=(T lhs, T rhs) {
-        return !(lhs > rhs);
-    }
-    friend bool operator>=(T lhs, T rhs) {
-        return !(lhs < rhs);
-    }
 
     friend constexpr Bool operator==(T lhs, T rhs) {
         // lhs == rhs iff (lhs-1) == (rhs-1).
@@ -234,4 +157,4 @@ public:
     }
 };
 
-Signed!!!
+Signed!!!*/
